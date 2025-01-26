@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Comparison Result</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #E0F2F1;
+        }
+        .code-box {
+            background-color: white;
+            border: 2px solid #00BFA5;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .scrollable-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .segment-button {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .segment-button:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .educational-icon {
+            font-size: 24px;
+            color: #00BFA5;
+            margin-right: 10px;
+        }
+        .segment-container {
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .segment-container:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <header class="w-full flex justify-between items-center p-4 bg-green-500 text-white">
+        <div class="flex items-center">
+            <span class="educational-icon">📚</span>
+            <h1 class="text-2xl font-bold">Vision Learning</h1>
+        </div>
+        <a href="results">
+            <button class="bg-green-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-700 transition duration-300">
+                Results
+            </button>
+        </a>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <h2 class="text-3xl font-bold text-center text-green-800 mb-8">Code Comparison Result</h2>
+
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="code-box p-6">
+                <h3 class="text-xl font-semibold mb-4 text-green-600 flex items-center">
+                    <span class="educational-icon">💻</span>Your Attempt
+                </h3>
+                <pre class="bg-gray-100 p-4 rounded-lg overflow-x-auto">{{ user_answer }}</pre>
+            </div>
+
+            <div class="code-box p-6">
+                <h3 class="text-xl font-semibold mb-4 text-green-600 flex items-center">
+                    <span class="educational-icon">✅</span>Correct Solution
+                </h3>
+                <div class="scrollable-list bg-gray-100 p-4 rounded-lg">
+                    {% for segment in segments %}
+                    <div class="segment-container w-full text-left p-2 mb-2 bg-white rounded shadow-sm">
+                        <pre>{{ segment | safe }}</pre>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="code-box p-6 mt-8">
+            <h3 class="text-xl font-semibold mb-4 text-green-600 flex items-center">
+                <span class="educational-icon">🤖</span>AI Analysis
+            </h3>
+            <pre class="bg-gray-100 p-4 rounded-lg overflow-x-auto whitespace-pre-wrap">{{ analysis }}</pre>
+        </div>
+
+        <div id="explanation" class="code-box p-6 mt-8" style="display: none;">
+            <h3 class="text-xl font-semibold mb-4 text-green-600 flex items-center">
+                <span class="educational-icon">🔍</span>Detailed Explanation
+            </h3>
+            <pre id="segment-explanation" class="bg-gray-100 p-4 rounded-lg overflow-x-auto whitespace-pre-wrap"></pre>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-4 bg-green-500 text-white">
+        <p>© 2025 Vision Learning - Empowering Education Through Technology</p>
+    </footer>
+
+    <script>
+        document.querySelectorAll('.segment-container').forEach(segment => {
+            segment.addEventListener('click', () => {
+                const codeSegment = segment.querySelector('pre').innerText;
+                explainSegment(codeSegment);
+            });
+        });
+
+        function explainSegment(segment) {
+            console.log('Segment clicked:', segment);
+
+            fetch('/explain_segment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    segment: segment,
+                    question: '{{ question }}'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.explanation) {
+                    // Replace AI Analysis content with the segment explanation
+                    document.querySelector('.code-box pre.whitespace-pre-wrap').innerText = data.explanation;
+
+                    // Optionally scroll to the AI Analysis box
+                    window.scrollTo({
+                        top: document.querySelector('.code-box').offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

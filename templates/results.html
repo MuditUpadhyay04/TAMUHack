@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Learning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#00BFA5',
+                        secondary: '#008975',
+                        light: '#E0F2F1',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .chat-bg {
+            background-color: #f0f9f7;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300bfa5' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .message-container {
+            max-height: calc(100vh - 240px);
+        }
+    </style>
+</head>
+<body class="bg-light min-h-screen flex flex-col">
+    <!-- Top Bar -->
+    <header class="bg-primary text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Vision Learning</h1>
+            <div class="space-x-4">
+                <button
+                    onclick="location.href='main'"
+                    class="bg-white text-primary px-4 py-2 rounded-lg hover:bg-light transition duration-300 ease-in-out"
+                >
+                    Practice More!!
+                </button>
+                <button
+                    onclick="location.href='index.html'"
+                    class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-primary transition duration-300 ease-in-out"
+                >
+                    Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow flex flex-col md:flex-row p-4 gap-4">
+        <div class="md:w-1/2 flex justify-center items-center bg-primary rounded-lg shadow-lg p-4">
+            <div class="tenor-gif-embed" data-postid="25980008" data-share-method="host" data-aspect-ratio="1" data-width="100%">
+                <a href="https://tenor.com/view/gideon-ai-the-flash-gif-25980008">Vision Learning</a>
+            </div>
+            <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+        </div>
+
+        <div class="md:w-1/2 bg-white rounded-lg shadow-lg flex flex-col chat-bg">
+            <div class="p-4 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-primary">Vision Learning Assistant</h2>
+            </div>
+            <div class="flex-grow overflow-y-auto p-4 message-container" id="chat-container">
+                <div class="bg-primary bg-opacity-10 p-3 rounded-lg mb-2">
+                    <p class="text-secondary">Welcome to Vision Learning! How can I assist you with your learning today?</p>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200">
+                <div class="flex">
+                    <input
+                        type="text"
+                        id="user-input"
+                        placeholder="Ask a question..."
+                        class="flex-grow p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                    >
+                    <button
+                        id="send-btn"
+                        class="bg-primary text-white px-6 py-2 rounded-r-lg hover:bg-secondary transition duration-300 ease-in-out"
+                    >
+                        Send
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-primary text-white text-center py-4">
+        <p>&copy; 2025 Vision Learning. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+
+        function addMessage(message, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `p-3 rounded-lg mb-2 ${isUser ? 'bg-light text-right' : 'bg-primary bg-opacity-10'}`;
+            messageDiv.innerHTML = `<p class="${isUser ? 'text-secondary' : 'text-secondary'}">${message}</p>`;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        async function handleSend() {
+            const message = userInput.value.trim();
+            if (message) {
+                addMessage(message, true);
+                userInput.value = '';
+
+                try {
+                    const response = await fetch('http://localhost:5005/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message }),
+                    });
+
+                    const data = await response.json();
+                    addMessage(data.response || "I'm sorry, I couldn't process your request.");
+                } catch (error) {
+                    console.error('Error:', error);
+                    addMessage("Oops! Something went wrong.");
+                }
+            }
+        }
+
+        sendBtn.addEventListener('click', handleSend);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleSend();
+            }
+        });
+    </script>
+</body>
+</html>

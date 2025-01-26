@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Learning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #00BFA5;
+            --dark-green: #008975;
+            --light-green: #E0F2F1;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, var(--light-green), var(--white));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .educational-banner {
+            width: 100%;
+            height: 200px;
+            background: url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Designer%20(2)-wFsY3n2aNzHwcB69etv49GpgHnOqim.jpeg') center center;
+            background-size: cover;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(0,191,165,0.9) 0%, rgba(0,137,117,0.8) 100%);
+        }
+
+        header {
+            background-color: rgba(0, 191, 165, 0.9);
+            padding: 1rem;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .login-btn {
+            background-color: var(--white);
+            color: var(--primary-green);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background-color: var(--dark-green);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .content-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #quote {
+            font-size: 1.5rem;
+            color: var(--dark-green);
+            margin-bottom: 4rem; /* Increase from 2rem to 4rem */
+            max-width: 600px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease-in-out;
+            text-align: center;
+            margin: 0 auto;
+            text-align: center;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #quote.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: var(--dark-green);
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: gentlePulse 6s ease-in-out infinite;
+        }
+
+        .mission-section {
+            background: var(--white);
+            padding: 3rem 2rem;
+            margin-top: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .mission-section h2 {
+            color: var(--dark-green);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .mission-text {
+            color: #2c3e50;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            text-align: justify;
+            padding: 0 1rem;
+        }
+
+        @keyframes gentlePulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.005);
+            }
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-icon {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: var(--primary-green);
+            opacity: 0.2;
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            100% {
+                transform: translate(var(--moveX, 100px), var(--moveY, 100px)) rotate(360deg);
+            }
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            background-color: var(--primary-green);
+            color: var(--white);
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .educational-banner {
+                height: 150px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            #quote {
+                font-size: 1.2rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .mission-section {
+                padding: 2rem 1rem;
+            }
+
+            .mission-text {
+                font-size: 1rem;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <button class="login-btn" onclick="location.href='login'">Login</button>
+    </header>
+
+    <div class="educational-banner">
+        <div class="banner-overlay"></div>
+    </div>
+
+    <main>
+        <div class="floating-elements"></div>
+        <div class="content-container">
+            <p id="quote" class="show">
+                "Success is a slow process, quitting doesn't speed it up"
+            </p>
+            <h1>Vision Learning</h1>
+
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Comprehensive Courses</h3>
+                    <p>Access a wide range of courses designed to help you succeed.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Personalized Learning</h3>
+                    <p>Learn at your own pace with customized study plans.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌟</div>
+                    <h3>Expert Instructors</h3>
+                    <p>Learn from industry professionals and experienced educators.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mission-section">
+            <h2>Our Mission</h2>
+            <p class="mission-text">
+                Powering individuals to confidently succeed in their career journey by providing personalized, comprehensive interview preparation tools and resources. We strive to equip professionals with the skills, insights, and strategies needed to excel in interviews, boost their confidence, and achieve their career goals.
+            </p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Vision Learning. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const quotes = [
+            "Success is a slow process, quitting doesn't speed it up.",
+            "The only limit to our realization of tomorrow is our doubts of today.",
+            "The future belongs to those who believe in the beauty of their dreams.",
+            "Hard work beats talent when talent doesn't work hard.",
+            "Believe in yourself and all that you are."
+        ];
+
+        function updateQuote() {
+            const quoteElement = document.getElementById('quote');
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+
+            quoteElement.classList.remove('show');
+
+            setTimeout(() => {
+                quoteElement.textContent = quotes[randomIndex];
+                quoteElement.classList.add('show');
+            }, 1000);
+        }
+
+        function createFloatingElements() {
+            const container = document.querySelector('.floating-elements');
+            const icons = ['📚', '🎓', '✏️', '💡', '🔍', '📝'];
+
+            for (let i = 0; i < 15; i++) {
+                const element = document.createElement('div');
+                element.className = 'floating-icon';
+                element.textContent = icons[Math.floor(Math.random() * icons.length)];
+                element.style.setProperty('--moveX', `${Math.random() * 200 - 100}px`);
+                element.style.setProperty('--moveY', `${Math.random() * 200 - 100}px`);
+                element.style.left = `${Math.random() * 100}%`;
+                element.style.top = `${Math.random() * 100}%`;
+                element.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(element);
+            }
+        }
+
+        setInterval(updateQuote, 5000);
+        createFloatingElements();
+    </script>
+</body>
+</html>
